@@ -28,7 +28,7 @@ CXX = g++
 CXXFLAGS = -O2 -std=c++11 -I$(ICUDA) -I$(ICUDA_MAC) -I$(ICPP_MAC) -I$(SRCDIR)
 
 # Add CUDA libraries to C++ compiler linking process
-LDLIBS += -lstdc++ -lcublas -lcurand -lcudart -llas -llapack -L$(LCUDA) -L$(LCUDA_MAC) -L$(LCPP_MAC)
+LDLIBS += -lstdc++ -lcublas -lcurand -lcudart -larmadillo -lopenblas -llapack -L$(LCUDA) -L$(LCUDA_MAC) -L$(LCPP_MAC)
 
 # List Executables and Objects
 LIB = cudatools
