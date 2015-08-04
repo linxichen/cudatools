@@ -1,4 +1,3 @@
-# 
 # Quick tutorial
 # $@ = target
 # $^ = all depdencies
@@ -20,7 +19,7 @@ LIBDIR = lib
 NVCC = nvcc
 
 # CUDA compiling options
-NVCCFLAGS = -arch sm_30 #-use_fast_math
+NVCCFLAGS = -v -arch sm_30 #-use_fast_math
 
 # Compiler for C code
 CXX = g++
@@ -29,28 +28,32 @@ CXX = g++
 CXXFLAGS = -O2 -std=c++11 -I$(ICUDA) -I$(ICUDA_MAC) -I$(ICPP_MAC) -I$(SRCDIR)
 
 # Add CUDA libraries to C++ compiler linking process
-LDLIBS += -lstdc++ -lcublas -lcurand -lcudart -larmadillo -lopenblas -llapack -L$(LCUDA) -L$(LCUDA_MAC) -L$(LCPP_MAC)
+LDLIBS += -lstdc++ -lcublas -lcurand -lcudart -llas -llapack -L$(LCUDA) -L$(LCUDA_MAC) -L$(LCPP_MAC)
 
 # List Executables and Objects
 LIB = cudatools
 
-all : createfolder $(LIB).o
+all : createfolder lib$(LIB).a
 
 createfolder :
 	mkdir -p lib
 
+# Create static library
+lib$(LIB).a :devicecode.o hostcode.o
+	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) -lib $^ -o $(LIBDIR)/$@ $(LDLIBS)
+	mv *.o $(LIBDIR)
+
 # Dlink CUDA relocatable object into executable object
-$(LIB).o : $(LIBDIR)/devicecode.o $(LIBDIR)/hostcode.o
-	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dlink $^ -o $(LIBDIR)/$@
-	cp $(LIBDIR)/$@ ../$@
+# devicecode_dlink.o : devicecode.o
+	# $(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dlink $^ -o $@
 
 # Compile CUDA code
 devicecode.o : $(SRCDIR)/devicecode.cu
-	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dc $^ -o $(LIBDIR)/$@
+	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) -dc $^ -o $@ $(LDLIBS)
 
 # Compile C++ code
 hostcode.o : $(SRCDIR)/hostcode.cpp
-	$(CXX) $(CXXFLAGS) $(LDLIBS) -c $^ -o $(LIBDIR)/$@
+	$(CXX) -v $(CXXFLAGS) -c $^ -o $@ $(LDLIBS)
 
 clean :
 	rm -f $(LIBDIR)/*.o
