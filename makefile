@@ -42,14 +42,15 @@ createfolder :
 # Dlink CUDA relocatable object into executable object
 $(LIB).o : devicecode.o hostcode.o
 	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dlink $^ -o $(LIBDIR)/$@
+	cp $(LIBDIR)/$@ ../$@
 
 # Compile CUDA code
 devicecode.o : $(SRCDIR)/devicecode.cu
-	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dc $^ -o $@
+	$(NVCC) $(NVCCFLAGS) $(CXXFLAGS) $(LDLIBS) -dc $^ -o $(LIBDIR)/$@
 
 # Compile C++ code
 hostcode.o : $(SRCDIR)/hostcode.cpp
-	$(CXX) $(CXXFLAGS) $(LDLIBS) -c $^ -o $@
+	$(CXX) $(CXXFLAGS) $(LDLIBS) -c $^ -o $(LIBDIR)/$@
 
 clean :
 	rm -f *.o
