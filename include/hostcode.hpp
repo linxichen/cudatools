@@ -66,6 +66,7 @@ void tauchen_givengrid(double rrho, double ssigma, T& Z, T& P, double width) {
 		};
 	};
 };
+
 void tauchen_vec(int, int, int, double*, double*, double*, double*, gridgen_fptr);
 
 // void qzdecomp(arma::mat &, arma::mat &, arma::mat &, arma::mat &);

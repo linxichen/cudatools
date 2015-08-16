@@ -217,9 +217,10 @@ void pdf2cdf(T* P, size_t n, T* CDF) {
 // given as a n-by-n array begins with 0 and then cumsum(PDF(1:end)).
 // e.g at i_now = 0, PDF(i_now,:) = [0.2 0.3 0.5], then CDF[i_now,:] = [0 0.2 0.5]
 // also given a random number in [0,1] for inverse CDF.
+/// highly recomment to use with pdf2cdf function.
 template<typename T>
 __host__ __device__
-unsigned int markovdiscrete(unsigned int i_now, T* CDF, size_t n, T u) {
+unsigned int markovdiscrete(unsigned int i_now, double* CDF, size_t n, T u) {
 	for (unsigned int i_tmr = 1; i_tmr < n; i_tmr++) {
 		if ( CDF[i_now+i_tmr*n] > u ) {
 			return i_tmr-1;
@@ -227,4 +228,14 @@ unsigned int markovdiscrete(unsigned int i_now, T* CDF, size_t n, T u) {
 	};
 	return n-1;
 };
+
+template<typename val_type>
+__host__ __device__
+void markovsimul(int T, double* CDF, int n, double* u, int init, int* sim) {
+	sim[0] = init;
+	for (int t = 1; t < T; t++) {
+		sim[t] = markovdiscrete(sim[t-1],CDF,n,u[t]);
+	};
+};
+
 #endif

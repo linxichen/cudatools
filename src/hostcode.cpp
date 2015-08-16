@@ -10,7 +10,7 @@
 
 using namespace arma;
 
-void mynormalcpp(double* output, double mmu, double ssigma, int n, unsigned seed) {
+void mynormalcpp(double* output, double mmu, double ssigma, int n, int seed) {
 
 	// Specify engine and distribution
 	std::default_random_engine generator(seed);

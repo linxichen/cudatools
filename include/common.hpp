@@ -23,6 +23,15 @@ struct cudavec {
 	T* hptr;
 	T* dptr;
 
+	/// default constructor
+	cudavec () {
+		n = 1;
+		hvec = thrust::host_vector<T>(n,0.0);
+		dvec = thrust::device_vector<T>(n,0.0);
+		hptr = thrust::raw_pointer_cast(hvec.data());
+		dptr = thrust::raw_pointer_cast(dvec.data());
+	};
+
 	/// constructor, with random default value of size
 	cudavec(size_t _n, T x) {
 		n = _n;
@@ -63,5 +72,8 @@ struct cudavec {
 	T& operator[] (const unsigned int i) {
 		return hptr[i];
 	}
+
+	/// assignment operator
+
 };
 #endif
