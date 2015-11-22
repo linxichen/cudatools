@@ -8,8 +8,8 @@
 /// Header file that contains things many files needs to know
 
 /// typedef useful things
-typedef thrust::host_vector<double> h_vec_d;
-typedef thrust::host_vector<int>    h_vec_i;
+typedef thrust::host_vector<double>   h_vec_d;
+typedef thrust::host_vector<int>      h_vec_i;
 typedef thrust::device_vector<double> d_vec_d;
 typedef thrust::device_vector<int>    d_vec_i;
 
@@ -24,7 +24,7 @@ struct cudavec {
 	T* dptr;
 
 	/// default constructor
-	cudavec () {
+	cudavec() {
 		n = 1;
 		hvec = thrust::host_vector<T>(n,0.0);
 		dvec = thrust::device_vector<T>(n,0.0);

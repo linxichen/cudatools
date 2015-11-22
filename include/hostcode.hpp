@@ -3,13 +3,16 @@
 
 #include <iostream>
 #include <iomanip>
+#include <fstream>
 #include <string>
+#include <cmath>
 #include <thrust/host_vector.h>
 #include <thrust/device_vector.h>
 #include "common.hpp"
 
-// This header should only contain routines that can only be compiled by
-// gcc48, for example things utilize std::random, armadillo, and LAPACK
+// This header should only contain routines that uses external
+// libraries gcc48, for example things utilize std::random,
+// armadillo, and LAPACK
 
 void mynormalcpp(double *, double, double, int, unsigned);
 void myuniformcpp(double *, int, unsigned);
@@ -29,7 +32,7 @@ typedef void (*gridgen_fptr)(double, double, int, double*);
 template <class T>
 void tauchen(double rrho, double ssigma, T& Z, T& P, double width) {
 	// Form the grid and neccessary info
-	double ssigma_z = sqrt( pow(ssigma,2)/(1-pow(rrho,2)) );
+	double ssigma_z = sqrt( std::pow(ssigma,2)/(1-std::pow(rrho,2)) );
 	int nzgrid = Z.size();
 	Z[nzgrid-1] = width*ssigma_z; Z[0] = -width*ssigma_z;
 	double step = (Z[nzgrid-1] - Z[0])/ double(nzgrid-1);
